@@ -1,124 +1,86 @@
-# 💼 Case Study: Sistema de Gestão do Jovem Aprendiz (Frontend)
+# Sistema de Gestão do Jovem Aprendiz — Frontend Case Study
 
-> **Nota de Confidencialidade:** Este estudo de caso descreve a arquitetura, tecnologias e decisões de design da interface do usuário de um sistema de gestão corporativa. O código-fonte e dados sensíveis são privados e mantidos sob sigilo.
+> ⚠️ **Sobre este repositório:** este projeto foi desenvolvido durante meu estágio na **SEAD-PI (Secretaria de Estado da Administração do Piauí)** e está em uso por um órgão público. Por isso, **o código-fonte é confidencial e não pode ser publicado**. Este repositório documenta a aplicação — arquitetura, decisões técnicas e telas reais do sistema — como estudo de caso do meu trabalho.
 
----
+## Visão geral
 
-## 📌 Visão Geral do Projeto
+Sistema web para gerenciar o programa de Jovem Aprendiz de instituições públicas: controle de ponto eletrônico, frequência, ocorrências disciplinares e emissão de certificados, com quatro perfis de acesso distintos e permissões granulares por papel.
 
-O **Sistema de Gestão do Jovem Aprendiz** é uma aplicação web desenvolvida para automatizar e otimizar o acompanhamento operacional, comportamental e administrativo de jovens aprendizes alocados em órgãos públicos e instituições parceiras.
+## Tecnologias
 
-A interface frontend foi projetada para oferecer uma experiência fluida, responsiva e intuitiva para **4 perfis de usuários distintos** (Administrador, Gerente, Supervisor e Jovem Aprendiz), garantindo controle de acesso granular e facilidade no cumprimento das rotinas diárias (marcação de ponto, envio de atestados, acompanhamento de frequência e solicitações de apoio).
+- **Next.js 16** (App Router) + **React 19**
+- **Tailwind CSS v4** para estilização
+- **NextAuth.js v4** com middleware de controle de acesso por papel (RBAC)
+- **FullCalendar** para o calendário de frequência
+- **Zod** para validação de formulários
+- **React Multi Date Picker** para seleção de intervalos de datas
+- **Lucide React** para ícones
 
----
+## Perfis e funcionalidades
 
-## 🛠️ Stack Tecnológica (Frontend)
+| Perfil | O que faz no sistema |
+|---|---|
+| **Administrador** | Cadastra orientadores e jovens aprendizes, gerencia lotação (órgão/unidade/setor), acompanha frequência geral, avalia desempenho e modera ocorrências/advertências |
+| **Gerente / Coordenador** | Visão consolidada de todos os orientadores e jovens sob sua gestão |
+| **Orientador / Supervisor** | Valida frequência e justificativas da própria equipe, abre advertências seguindo critérios pré-definidos, acompanha chamados |
+| **Jovem Aprendiz** | Registra ponto eletrônico, consulta calendário de frequência, envia atestados/justificativas em PDF, acompanha ocorrências e mantém seus dados |
 
-- **Core Framework:** [Next.js 16](https://nextjs.org/) (App Router & Server/Client Components)
-- **Biblioteca de Interface:** [React 19](https://react.dev/)
-- **Estilização & Design System:** [Tailwind CSS v4](https://tailwindcss.com/) + CSS Customizado
-- **Autenticação & Segurança:** [NextAuth.js v4](https://next-auth.js.org/) + Middleware RBAC
-- **Ponto Eletrônico & Calendários:** FullCalendar (`@fullcalendar/react`, `@fullcalendar/daygrid`, `@fullcalendar/timegrid`)
-- **Validação de Formulários:** [Zod](https://zod.dev/)
-- **Manipulação de Datas:** React Multi Date Picker & React Date Object
-- **Iconografia:** Lucide React
+## Módulos principais
 
----
+**Autenticação e controle de acesso** — proteção de rotas via middleware do Next.js, com verificação de sessão JWT e permissões específicas por perfil.
 
-## 🚀 Principais Módulos & Funcionalidades Desenvolvidas
+**Ponto eletrônico** — interface de registro de entrada/saída com detecção automática do tipo de batida e fechamento automático da frequência em caso de esquecimento.
 
-### 1. 🔑 Autenticação e Controle de Acesso Baseado em Papéis (RBAC)
-- **Proteção de Rotas via Middleware:** Controle estrito de rotas no Next.js (`src/middleware.js`), impedindo acessos não autorizados entre os diferentes papéis.
-- **Sessões Seguras:** Integração com NextAuth.js para persistência de tokens JWT e verificação de perfil em tempo de execução.
-- **Fluxo de Recuperação de Senha:** Interface amigável para redefinição de credenciais com validação em tempo real via Zod.
+**Frequência** — calendário mensal (FullCalendar) com status por dia (validado, pendente, falta, falta justificada), filtros por órgão/unidade/período e exportação em CSV.
 
----
+**Justificativas e atestados** — upload de PDF com período de afastamento, fluxo de aprovação pelo orientador (pendente → aprovado/rejeitado).
 
-### 2. ⏰ Registro de Ponto Eletrônico
-- **Interface Intuitiva:** Componente visual de relógio de ponto e marcação de presença com feedback imediato de status e horário registrado.
-- **Histórico & Espelho de Ponto:** Exibição clara dos registros diários e consolidação de horas.
+**Ocorrências e advertências** — abertura de advertência pelo orientador segundo critérios objetivos (faltas injustificadas, atrasos frequentes, uso de celular etc.), com regra de 3 advertências = desligamento do programa.
 
----
+**Gestão de lotação** — transferência de jovens entre órgãos, unidades e setores, com vínculo ao orientador responsável.
 
-### 3. 🗓️ Gestão Avançada de Frequência e Calendário
-- **Visualização de Jornada:** Calendário interativo baseado em **FullCalendar** para exibição de dias trabalhados, faltas, folgas e eventos da instituição.
-- **Lançamento de Justificativas e Atestados:** Formulários dinâmicos com seletores de múltiplas datas (`react-multi-date-picker`) e upload de documentos (PDF/imagens).
-- **Painel de Validação para Supervisores:** Fluxo de aprovação/rejeição de atestados médicos com visualização prévia de documentos enviados.
+## Capturas de tela
 
----
+Todos os dados abaixo são de ambiente de teste (usuários "Jovem teste" / "Supervisor Teste"); nomes reais de orientadores foram borrados nas telas administrativas.
 
-## 🖼️ Demonstração Visual da Interface (UI)
+<details open>
+<summary><strong>Acesso e Administrador</strong></summary>
+<br>
 
-### 1. 🔑 Tela de Autenticação (Login)
-![Tela de Login](assets/login_screen.png)
-*Interface de login limpa e responsiva com autenticação via NextAuth.*
+| Tela inicial | Login |
+|---|---|
+| ![Tela inicial](assets/screenshots/01-landing.jpg) | ![Login](assets/screenshots/02-login.jpg) |
 
-### 2. 📊 Painel Principal (Dashboard do Orientador / Supervisor)
-![Painel Principal](assets/dashboard.png)
-*Dashboard modular com cards de navegação rápida para acompanhamento dos jovens aprendizes.*
+| Painel do Gerente | Lista de orientadores |
+|---|---|
+| ![Painel do Gerente](assets/screenshots/03-painel-gerente.jpg) | ![Lista de orientadores](assets/screenshots/04-lista-orientadores.jpg) |
 
-### 3. 🗓️ Módulo de Controle de Frequência
-![Controle de Frequência](assets/frequencia.png)
-*Filtros avançados por período, órgão, unidade e aprendiz para consulta e geração de relatórios.*
+</details>
 
-### 4. 📄 Validação de Atestados e Justificativas
-![Validar Justificativas](assets/validar_atestados.png)
-*Painel para análise, aprovação ou indeferimento de justificativas enviadas pela equipe.*
+<details>
+<summary><strong>Orientador / Supervisor</strong></summary>
+<br>
 
----
+| Controle de frequência | Solicitar advertência |
+|---|---|
+| ![Controle de frequência](assets/screenshots/05-controle-frequencia.jpg) | ![Solicitar advertência](assets/screenshots/06-solicitar-advertencia.jpg) |
 
-### 4. 📊 Dashboards Customizados por Perfil
+</details>
 
-#### 👨‍💼 Painel do Gerente
-- Monitoramento global de lotações e distribuição de jovens aprendizes por órgãos parceiros.
-- Relatórios analíticos de frequência geral e emissão de advertências.
-- Gerenciamento de chamados administrativos e programas de apoio psicológico.
+<details>
+<summary><strong>Jovem Aprendiz</strong></summary>
+<br>
 
-#### 👨‍🏫 Painel do Supervisor
-- Acompanhamento em tempo real da frequência diária da equipe sob sua supervisão.
-- Módulo de avaliação de desempenho e acompanhamento comportamental dos aprendizes.
-- Validação e deferimento de atestados médicos.
+| Registro de ponto | Calendário de frequência |
+|---|---|
+| ![Meu ponto](assets/screenshots/07-meu-ponto.jpg) | ![Calendário](assets/screenshots/08-calendario.jpg) |
 
-#### 👨‍🎓 Painel do Jovem Aprendiz
-- Bater ponto rápido e visualizar espelho de ponto acumulado.
-- Envio de certificados de cursos extracurriculares e comprovação de atividades.
-- Canal direto para solicitação de apoio psicológico e abertura de chamados.
+</details>
 
----
+## Minha contribuição
 
-## 📐 Arquitetura & Boas Práticas no Frontend
+Fui responsável pelo desenvolvimento completo do frontend: construí as telas dos quatro perfis de usuário, implementei o middleware de autenticação e controle de acesso por papel, desenvolvi os módulos de ponto eletrônico e calendário de frequência (integração com FullCalendar), o fluxo de justificativas/atestados e o sistema de advertências e chamados administrativos.
 
-```text
-src/
-├── app/
-│   ├── (auth)/              # Rotas de Login e Recuperação de Senha
-│   ├── (dashboard)/         # Grupos de Rotas Protegidas por Perfil
-│   │   ├── admin/           # Visão Administrador
-│   │   ├── gerente/         # Visão Gerente
-│   │   ├── supervisor/      # Visão Supervisor
-│   │   └── jovem-aprendiz/  # Visão Jovem Aprendiz
-│   ├── components/          # Componentes Reutilizáveis (Header, Buttons, Selects)
-│   └── api/                 # Handlers NextAuth e rotas internas de apoio
-└── middleware.js            # Proteção de rotas RBAC (Role-Based Access Control)
-```
+## Arquitetura
 
-### Destaques de Engenharia de Software:
-1. **Componentização Modular:** Criação de componentes genéricos e altamente reutilizáveis como `SearchableSelect`, `InternalHeader`, `AuthErrorAlert` e seletores assíncronos.
-2. **Separação de Responsabilidades:** Utilização de componentes de servidor (Server Components) para renderização inicial rápida e componentes de cliente (Client Components) estritamente onde há interatividade (formulários, calendários e mapas).
-3. **UX/UI Acessível e Responsiva:** Layouts totalmente adaptáveis a dispositivos móveis e desktops, utilizando padrões modernos de acessibilidade e microinterações.
-
----
-
-## 🎯 Minhas Principais Contribuições
-
-- **Desenvolvimento dos Telas e Componentes das 4 Visões:** Construção e integração das rotas completas do painel (Dashboard do Jovem Aprendiz, Supervisor e Gerente).
-- **Módulo de Atestados e Justificativas:** Criação da interface de upload, validação e listagem de atestados de frequência.
-- **Implementação do Ponto e Calendário:** Construção da interface do relógio de ponto e visualização de eventos no FullCalendar.
-- **Sistema de Advertências e Chamados:** Implementação de telas administrativas para registro, controle e consulta de advertências disciplinares.
-
----
-
-## 💡 Desafios Solucionados
-
-- **Validação de Permissões no Roteamento:** Garantir que um Jovem Aprendiz não acesse rotas do Gerente ou Supervisor, resolvido com um middleware centralizado de NextAuth inspecionando permissões JWT em tempo de requisição.
-- **Upload e Seleção Multidatas em Atestados:** Permitir a seleção de múltiplos dias de afastamento de forma fluida sem degradar a performance da interface.
+O projeto segue a estrutura de rotas do App Router do Next.js, com separação clara entre componentes de servidor e cliente, middleware de autenticação centralizado e componentes de UI reutilizáveis entre os diferentes perfis. O design é totalmente responsivo, com atenção a acessibilidade.
